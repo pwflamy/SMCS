@@ -1,0 +1,33 @@
+unit DeleteRule;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, opisaniya;
+
+type
+  TForm4 = class(TForm)
+    Label1: TLabel;
+    EditRule: TEdit;
+    Label2: TLabel;
+    btnOK: TButton;
+    btnCancel: TButton;
+    ComboBox1: TComboBox;
+    Label3: TLabel;
+    ComboBox2: TComboBox;
+    Label4: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form4: TForm4;
+
+implementation
+
+{$R *.dfm}
+
+end.

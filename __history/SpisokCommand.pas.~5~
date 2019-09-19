@@ -1,0 +1,38 @@
+unit SpisokCommand;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, opisaniya;
+
+type
+  TForm5 = class(TForm)
+    Label1: TLabel;
+    Label2: TLabel;
+    Memo1: TMemo;
+  private
+    { Private declarations }
+  public
+    CountSubject, CountObject: byte;
+    DictSubject,DictObject: arraySubObj;
+    chislo: integer;
+    constructor Create(AOwner: TComponent; x,y: arraySubObj; kolvoSub,kolvoObj: byte; );
+  end;
+
+var
+  Form5: TForm5;
+
+implementation
+
+constructor TForm5.Create(AOwner: TComponent; x: arraySubObj; y: arraySubObj; kolvoSub: Byte; kolvoObj: Byte);
+begin
+  inherited Create(AOwner);
+  CountSubject := kolvoSub;
+  CountObject := kolvoObj;
+  DictSubject := x;
+  DictObject := y;
+  chislo := 3*(countSubject+1)*(CountObject+1);
+end;
+
+end.

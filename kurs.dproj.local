@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>1899.12.30 00:00:00.000.797,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.193,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.498,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.330,=D:\мбкс\курс\Unit3.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.995,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.319,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.795,=C:\Users\LOL\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.351,C:\Users\LOL\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\мбкс\курс\client.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.846,D:\мбкс\курс\EnterRule.pas=D:\мбкс\курс\Unit3.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.917,D:\мбкс\курс\DeleteRule.pas=D:\мбкс\курс\Unit4.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.016,=D:\мбкс\курс\Unit2.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.000,D:\мбкс\курс\Unit2.pas=D:\мбкс\курс\newCommand.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.784,=D:\мбкс\курс\Unit3.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.449,=D:\мбкс\курс\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.917,D:\мбкс\курс\DeleteRule.dfm=D:\мбкс\курс\Unit4.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.209,C:\Users\LOL\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.000,D:\мбкс\курс\Unit2.dfm=D:\мбкс\курс\newCommand.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.556,D:\мбкс\курс\opisaniya.pas=D:\мбкс\курс\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.351,C:\Users\LOL\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\мбкс\курс\client.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.584,=D:\мбкс\курс\Unit4.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.846,D:\мбкс\курс\EnterRule.dfm=D:\мбкс\курс\Unit3.dfm</Transaction>
+    <Transaction>2016.12.29 19:58:34.508,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>2016.12.29 20:04:55.975,=D:\мбкс\курс\Unit5.pas</Transaction>
+    <Transaction>2016.12.29 20:07:51.731,D:\мбкс\курс\SpisokCommand.dfm=D:\мбкс\курс\Unit5.dfm</Transaction>
+    <Transaction>2016.12.29 20:07:51.731,D:\мбкс\курс\SpisokCommand.pas=D:\мбкс\курс\Unit5.pas</Transaction>
+    <Transaction>2016.12.29 20:31:07.299,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+    <Transaction>2016.12.29 20:34:13.337,=D:\мбкс\курс\Unit6.pas</Transaction>
+    <Transaction>2016.12.29 20:43:17.362,D:\мбкс\курс\ytechkaRisuem.pas=D:\мбкс\курс\Unit6.pas</Transaction>
+    <Transaction>2016.12.29 20:43:17.362,D:\мбкс\курс\ytechkaRisuem.dfm=D:\мбкс\курс\Unit6.dfm</Transaction>
+    <Transaction>2016.12.30 02:05:51.099,D:\мбкс\курс\kurs.dproj=D:\мбкс\курс\kurs.dproj</Transaction>
+  </Transactions>
+</BorlandProject>

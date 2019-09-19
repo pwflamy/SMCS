@@ -1,0 +1,21 @@
+unit opisaniya;
+
+interface
+
+type
+  primOperator = record
+    commandType: byte;               // 1 - создать суб, 2 - создать об, 3 - внести право, 4 - удалить право, 5 - удалить суб, 6 - удалить об
+    name: string;                    // Имя субъекта, объекта, права
+    stroka: string;                  // строка матрицы
+    stolbec: string;                 // столбец матрицы
+  end;
+  command = array[0..49] of primOperator;
+  command = record
+    chisloOp: byte;
+    massiv: masscommand;
+  end;
+  arrayCom = array[0..49] of command;
+  arraySubObj = array[0..49] of string;
+implementation
+
+end.

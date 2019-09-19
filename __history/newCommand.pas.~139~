@@ -1,0 +1,266 @@
+unit newCommand;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,Generics.Collections, opisaniya, EnterRule, deleteRule;
+
+type
+  TForm2 = class(TForm)
+    btnOK: TButton;
+    btnCancel: TButton;
+    Memo1: TMemo;
+    CreateSub: TButton;
+    Label1: TLabel;
+    CreateObj: TButton;
+    EnterRule: TButton;
+    DeleteRule: TButton;
+    DeleteSub: TButton;
+    DeleteObj: TButton;
+    btnClearCommand: TButton;
+    btnClearLastOp: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure CreateSubClick(Sender: TObject);
+    procedure CreateObjClick(Sender: TObject);
+    procedure DeleteSubClick(Sender: TObject);
+    procedure DeleteObjClick(Sender: TObject);
+    procedure btnClearCommandClick(Sender: TObject);
+    procedure btnClearLastOpClick(Sender: TObject);
+    procedure EnterRuleClick(Sender: TObject);
+    procedure DeleteRuleClick(Sender: TObject);
+  private
+  public
+    NomerCommand, CountCommand: byte;
+    DictSub,DictObj: arraySubObj;
+    ArrayCommand: arrayCom;
+    commanda: command;
+    tekNomerOper: byte;
+    function nalichie(typ: byte; s: string): boolean;
+    function CheckMassiv(x: arraySubObj; s: string): boolean;
+    constructor Create(AOwner: TComponent; i: byte; x,y: arraySubObj; z: arrayCom; w: byte);
+  end;
+
+var
+  Form2: TForm2;
+  Form3: TForm3;
+  Form4: TForm4;
+
+implementation
+
+{$R *.dfm}
+
+constructor TForm2.Create(AOwner: TComponent; i: byte; x,y: arraySubObj; z: arrayCom; w: byte);
+begin
+  inherited Create(AOwner);
+  NomerCommand := i;
+  DictSub := x;
+  DictObj := y;
+  tekNomerOper := 0;
+  CountCommand := w;
+  ArrayCommand := z;
+end;
+
+function TForm2.nalichie(typ: Byte; s: string): boolean;
+var
+  i,j: byte;
+  res: boolean;
+begin
+  res := false;
+  if CountCommand > 0 then
+    for I := 0 to CountCommand-1 do
+      if ArrayCommand[i].chisloOp > 0 then
+        for j := 0 to ArrayCommand[i].chisloOp-1 do
+          if (ArrayCommand[i].massiv[j].commandType = typ) and (ArrayCommand[i].massiv[j].name = s) then
+            res := true;
+  if tekNomerOper > 0 then
+    for I := 0 to tekNomerOper-1 do
+      if (commanda.massiv[i].commandType = typ) and (commanda.massiv[i].name = s) then
+        res := true;
+  nalichie := res;
+end;
+
+procedure TForm2.btnClearCommandClick(Sender: TObject);
+var
+  i: byte;
+  primOp: primOperator;
+begin
+  primOp.commandType := 0;
+  primOp.name := '';
+  primOp.stroka := '';
+  primOp.stolbec := '';
+  if tekNomerOper > 0 then
+    for i := 0 to tekNomerOper-1 do
+      commanda.massiv[i] := primOp;
+  tekNomerOper := 0;
+  Memo1.Clear;
+  Memo1.Lines.Add('command Q' + IntToStr(NomerCommand) + ';');
+end;
+
+procedure TForm2.btnClearLastOpClick(Sender: TObject);
+var
+  i: byte;
+  primOp: primOperator;
+begin
+  primOp.commandType := 0;
+  primOp.name := '';
+  primOp.stroka := '';
+  primOp.stolbec := '';
+  if tekNomerOper > 0 then
+  begin
+    commanda.massiv[tekNomerOper-1] := primOp;
+    dec(tekNomerOper);
+    Memo1.Lines.Delete(Memo1.Lines.Count-1);
+  end;
+end;
+
+function TForm2.CheckMassiv(x: arraySubObj; s: string): boolean;
+var
+  i: byte;
+  res: boolean;
+begin
+  res := false;
+  for I := 0 to 49 do
+    if x[i] = s then
+      res := true;
+  CheckMassiv := res;
+end;
+
+procedure TForm2.CreateObjClick(Sender: TObject);
+var
+  s: string;
+  primOp: primOperator;
+begin
+  s := InputBox('Создать объект','Введите имя объекта','');
+  if s <> '' then
+  if (CheckMassiv(DictObj,s) = true) or (nalichie(2,s) = true) then
+    ShowMessage('Объект с таким именем уже есть !')
+  else
+    begin
+      primOp.commandType := 2;
+      primOp.name        := s;
+      primOp.stroka      := '-';
+      primOp.stolbec     := '-';
+      primOp.vivod := '  создать объект ' + s + ';';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+end;
+
+procedure TForm2.CreateSubClick(Sender: TObject);
+var
+  s: string;
+  primOp: primOperator;
+begin
+  s := InputBox('Создать субъект','Введите имя субъекта','');
+  if s <> '' then
+  if (CheckMassiv(DictSub,s) = true) or (nalichie(1,s) = true) then
+    ShowMessage('Субъект с таким именем уже есть !')
+  else
+    begin
+      primOp.commandType := 1;
+      primOp.name        := s;
+      primOp.stroka      := '-';
+      primOp.stolbec     := '-';
+      primOp.vivod       := '  создать субъект ' + s + ';';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+end;
+
+procedure TForm2.DeleteObjClick(Sender: TObject);
+var
+  s: string;
+  primOp: primOperator;
+begin
+  s := InputBox('Удалить объект','Введите имя объекта','');
+  if (CheckMassiv(DictObj,s) = false) or (nalichie(2,s) = false)  then
+    ShowMessage('Объекта с таким именем нет !')
+  else
+    begin
+      primOp.commandType := 5;
+      primOp.name        := s;
+      primOp.stroka      := '-';
+      primOp.stolbec     := '-';
+      primOp.vivod  := '  удалить объект ' + s + ';';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+
+end;
+
+procedure TForm2.DeleteRuleClick(Sender: TObject);
+var
+  primOp: primOperator;
+begin
+  if (not Assigned(Form4)) or (Form4 = nil) then   // проверка существования Формы (если нет, то
+    Form4:=TForm4.Create(Self, DictSub, DictObj, ArrayCommand, CountCommand, commanda, tekNomerOper);    // создание Формы)
+  Form4.ShowModal;
+  if Form4.ModalResult = mrOk then
+    begin
+      primOp.commandType := 4;
+      primOp.name        := Form4.nameRule;
+      primOp.stroka      := Form4.rulestroka;
+      primOp.stolbec     := Form4.rulestolbec;
+      primOp.vivod  := '  удалить право ' + primOp.name + ' из М[' + primOp.stroka + ';' + primOp.stolbec + ']';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+  Form4.Free;
+  Form4 := nil;
+end;
+
+procedure TForm2.DeleteSubClick(Sender: TObject);
+var
+  s: string;
+  primOp: primOperator;
+begin
+  s := InputBox('Удалить субъект','Введите имя субъекта','');
+  if s <> '' then
+  if (CheckMassiv(DictSub,s) = false) and (nalichie(1,s) = false) then
+    ShowMessage('Субъекта с таким именем нет !')
+  else
+    begin
+      primOp.commandType := 5;
+      primOp.name        := s;
+      primOp.stroka      := '-';
+      primOp.stolbec     := '-';
+      primOp.vivod := '  удалить субъект ' + s + ';';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+end;
+
+procedure TForm2.EnterRuleClick(Sender: TObject);
+var
+  primOp: primOperator;
+begin
+  if (not Assigned(Form3)) or (Form3 = nil) then   // проверка существования Формы (если нет, то
+    Form3:=TForm3.Create(Self, DictSub, DictObj, ArrayCommand, CountCommand, commanda, tekNomerOper);    // создание Формы)
+  Form3.ShowModal;
+  if Form3.ModalResult = mrOk then
+    begin
+      primOp.commandType := 3;
+      primOp.name        := Form3.nameRule;
+      primOp.stroka      := Form3.rulestroka;
+      primOp.stolbec     := Form3.rulestolbec;
+      primOp.vivod := '  внести право ' + primOp.name + ' в М[' + primOp.stroka + ';' + primOp.stolbec + ']';
+      commanda.massiv[tekNomerOper] := primOp;
+      inc(tekNomerOper);
+      Memo1.Lines.Add(primOp.vivod);
+    end;
+  Form3.Free;
+  Form3 := nil;
+end;
+
+procedure TForm2.FormCreate(Sender: TObject);
+begin
+  Memo1.Lines.Add('command Q' + IntToStr(NomerCommand) + ';');
+end;
+
+end.

@@ -1,0 +1,482 @@
+unit client;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, newCommand,Generics.Collections, opisaniya,
+  Vcl.ExtCtrls, SpisokCommand, ytechkaRisuem;
+
+type
+  TForm1 = class(TForm)
+    StringGrid1: TStringGrid;
+    Memo1: TMemo;
+    LabelSpisokKomand: TLabel;
+    btnNewCommand: TButton;
+    btnClearCommands: TButton;
+    btnExecuteCom: TButton;
+    btnCheckSafe: TButton;
+    Button1: TButton;
+    Memo2: TMemo;
+    LabelSystemaBezopasna: TLabel;
+    LabelYtechka: TLabel;
+    Label1: TLabel;
+    btnSpisokCommand: TButton;
+    btnClear: TButton;
+    procedure btnNewCommandClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnClearCommandsClick(Sender: TObject);
+    procedure btnExecuteComClick(Sender: TObject);
+    procedure btnCheckSafeClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure btnSpisokCommandClick(Sender: TObject);
+    procedure btnClearClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    ArrayCommand: arrayCom;
+    CountCommand, CountSubject, CountObject: byte;
+    DictSubject,DictObject: arraySubObj;
+    ykaz: byte;
+    procedure WriteCommand(commanda: command);
+    procedure CreateSubject(name: string);
+    procedure CreateObject(name: string);
+    procedure EnterRule(name,stroka,stolbec: string);
+    procedure DeleteRule(name,stroka,stolbec: string);
+    procedure DeleteSubject(name: string);
+    procedure DeleteObject(name: string);
+//    procedure risuem;
+  end;
+
+var
+  Form1: TForm1;
+  Form2: TForm2;
+  Form5: TForm5;
+  Form6: TForm6;
+  kto,naKogo,chto,cherezKogo,kak: string;
+  tip: byte;
+
+
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  CountCommand := 0;
+  ykaz := 0;
+end;
+
+procedure TForm1.WriteCommand(commanda: command);
+var
+  i: byte;
+begin
+  Memo1.Lines.Add('command Q' + IntToStr(CountCommand) + ';');
+  for i := 0 to commanda.chisloOp-1 do
+    Memo1.Lines.Add(commanda.massiv[i].vivod);
+  Memo1.Lines.Add('end');
+  Memo1.Lines.Add(' ');
+end;
+
+{procedure TForm1.risuem;
+var
+  x: integer;
+begin
+  kto := 's';
+  cherezKogo := 't';
+  naKogo := 'o';
+  chto := 'a';
+  kak := 'w';
+  with image1.Canvas do
+    begin
+      pen.Color := clBlack;
+      ellipse(35,100,75,140);
+      ellipse(135,100,175,140);
+      ellipse(235,100,275,140);
+      Font.Name := 'Arial';
+      Font.Size := 15;
+      x := 55 - TextWidth(kto) div 2;
+      Textout(x,120 - 14, kto);
+      x := 155 - TextWidth(cherezKogo) div 2;
+      Textout(x,120 - 14, cherezKogo);
+      x := 255 - TextWidth(naKogo) div 2;
+      Textout(x,120 - 14, naKogo);
+      polyline([Point(75,120),Point(135,120)]);
+      polyline([Point(175,120),Point(235,120)]);
+      x := 105 - TextWidth(kak) div 2;
+      Textout(x,110 - 14, kak);
+      x := 205 - TextWidth(chto) div 2;
+      Textout(x,110 - 14, chto);
+      polyline([Point(125,115),Point(135,120)]);
+      polyline([Point(125,125),Point(135,120)]);
+      polyline([Point(225,115),Point(235,120)]);
+      polyline([Point(225,125),Point(235,120)]);
+    end;
+end;                  }
+
+procedure TForm1.btnCheckSafeClick(Sender: TObject);
+var
+  i,j,k: byte;
+  safe: boolean;
+  s: string;
+label
+  GotoMetka;
+begin
+  i := 1;
+  j := 1;
+  safe := true;
+  kto := '';
+  kak := '';
+  cherezKogo := '';
+  chto := '';
+  naKogo := '';
+  tip := 0;
+  Memo2.Clear;
+  for i := 0 to CountSubject-1 do
+    for j := 0 to CountObject-1 do
+      begin
+        if (pos('r',StringGrid1.Cells[j+1,i+1]) <> 0) or (pos('w',StringGrid1.Cells[j+1,i+1]) <> 0) then
+          begin
+            for k := 0 to CountObject-1 do
+               if StringGrid1.Cells[k+1,j+1] <> '' then
+                 if StringGrid1.Cells[k+1,i+1] <> StringGrid1.Cells[k+1,j+1] then
+                  begin
+                    safe := false;
+                    kto := StringGrid1.Cells[0,i+1];
+                    naKogo := StringGrid1.Cells[k+1,0];
+                    kak := StringGrid1.Cells[j+1,i+1];
+                    cherezKogo := StringGrid1.Cells[j+1,0];
+                    if kak = 'w' then
+                      tip := 1
+                    else
+                      tip := 2;
+                    s := StringGrid1.Cells[k+1,j+1];
+                    if pos(s,StringGrid1.Cells[k+1,i+1]) <> 0 then
+                      delete(s, pos(StringGrid1.Cells[k+1,i+1],s), StringGrid1.Cells[k+1,i+1].Length);
+                    chto := s;
+                    goto GotoMetka;
+                  end;
+            for k := 0 to CountObject-1 do
+              if (k <> j)  then
+                if StringGrid1.Cells[k+1,i+1] <> '' then
+                  if StringGrid1.Cells[k+1,i+1] <> StringGrid1.Cells[k+1,j+1] then
+                    begin
+                      safe := false;
+                      kto := StringGrid1.Cells[j+1,0];
+                      naKogo := StringGrid1.Cells[k+1,0];
+                      kak := StringGrid1.Cells[j+1,i+1];
+                      cherezKogo := StringGrid1.Cells[j+1,0];
+                      if kak = 'w' then
+                        tip := 3
+                      else
+                        tip := 4;
+                      s := StringGrid1.Cells[k+1,i+1];
+                      if pos(s,StringGrid1.Cells[k+1,j+1]) <> 0 then
+                        delete(s, pos(StringGrid1.Cells[k+1,j+1],s), StringGrid1.Cells[k+1,j+1].Length);
+                      chto := s;
+                      goto GotoMetka;
+                    end;
+          end;
+      end;
+  GotoMetka:
+  if safe = true then
+  begin
+    Form1.LabelSystemaBezopasna.Font.Color := clGreen;
+    Form1.LabelSystemaBezopasna.Caption := '   Система безопасна!';
+    Form1.LabelYtechka.Caption := '';
+  end
+  else
+  begin
+    Form1.LabelSystemaBezopasna.Font.Color := clRed;
+    Form1.LabelSystemaBezopasna.Caption := 'Система небезопасна!';
+    Form1.LabelYtechka.Caption := 'Субъект ' + kto + ' может получить право ' + chto + ' на ' + naKogo;
+    case tip of
+      1:  begin
+            Memo2.Lines.Add('Q0: создать субъект z');
+            Memo2.Lines.Add('Q1: внести право r в M[' + kto + ',z]');
+            Memo2.Lines.Add('Q2: внести право w в M[' + kto + ',z]');
+            Memo2.Lines.Add('Q3: внести право w в M[' + cherezKogo + ',z]');
+            Memo2.Lines.Add('Q4: внести право ' + chto + ' в M[z,' + naKogo + ']');
+            Memo2.Lines.Add('Q4: внести право ' + chto + ' в M[' + kto + ',' + naKogo + ']');
+          end;
+      2:  Memo2.Lines.Add('Q0: внести право ' + chto + ' в M[' + kto + ',' + naKogo + ']');
+      3:  Memo2.Lines.Add('Q0: внести право ' + chto + ' в M[' + kto + ',' + naKogo + ']');
+      4:  begin
+            Memo2.Lines.Add('Q0: создать субъект z');
+            Memo2.Lines.Add('Q1: внести право r в M[' + kto + ',z]');
+            Memo2.Lines.Add('Q2: внести право w в M[' + kto + ',z]');
+            Memo2.Lines.Add('Q3: внести право w в M[' + cherezKogo + ',z]');
+            Memo2.Lines.Add('Q4: внести право ' + chto + ' в M[z,' + naKogo + ']');
+            Memo2.Lines.Add('Q4: внести право ' + chto + ' в M[' + kto + ',' + naKogo + ']');
+          end;
+    end;
+  end;
+end;
+
+procedure TForm1.btnClearClick(Sender: TObject);
+var
+  i,j: byte;
+begin
+  for I := 0 to CountSubject do
+    for j := 0 to CountObject do
+      StringGrid1.Cells[j,i] := '';
+  CountSubject := 0;
+  CountObject := 0;
+end;
+
+procedure TForm1.btnClearCommandsClick(Sender: TObject);
+var
+  i: byte;
+begin
+  Memo1.Clear;
+  CountCommand := 0;
+  ykaz := 0;
+end;
+
+procedure TForm1.CreateSubject(name: string);
+var
+  i: byte;
+begin
+  if CountSubject > 0 then
+    for I := 0 to CountSubject-1 do
+      if DictSubject[i] = name then
+        exit;
+  DictSubject[CountSubject] := name;
+  DictObject[CountObject] := name;
+  if CountSubject+2 > StringGrid1.RowCount then
+    StringGrid1.RowCount := StringGrid1.RowCount + 1;
+  if CountObject+2 > StringGrid1.ColCount then
+    StringGrid1.ColCount := StringGrid1.ColCount + 1;
+  Form1.StringGrid1.Cells[0,CountSubject+1] := name;
+  Form1.StringGrid1.Cells[CountObject+1,0] := name;
+  inc(CountObject);
+  inc(CountSubject);
+end;
+
+procedure TForm1.CreateObject(name: string);
+var
+  i: byte;
+begin
+  if CountObject > 0 then
+    for I := 0 to CountObject-1 do
+      if DictObject[i] = name then
+        exit;
+  DictObject[CountObject] := name;
+  if CountObject+2 > StringGrid1.ColCount then
+    StringGrid1.ColCount := StringGrid1.ColCount + 1;
+  Form1.StringGrid1.Cells[CountObject+1,0] := name;
+  inc(CountObject);
+end;
+
+procedure TForm1.EnterRule(name: string; stroka: string; stolbec: string);
+var
+  i,str,stol: byte;
+begin
+  if CountSubject > 0 then
+   for I := 0 to CountSubject-1 do
+    if DictSubject[i] = stroka then
+      begin
+        str := i+1;
+        break;
+      end;
+  if CountObject > 0 then
+   for I := 0 to CountObject-1 do
+    if DictObject[i] = stolbec then
+      begin
+        stol := i+1;
+        break;
+      end;
+  Form1.StringGrid1.Cells[stol,str] := Form1.StringGrid1.Cells[stol,str] + name
+
+end;
+
+procedure TForm1.DeleteRule(name: string; stroka: string; stolbec: string);
+var
+  i,str,stol, position, dlina: byte;
+  s: string;
+begin
+  if CountSubject > 0 then
+   for I := 0 to CountSubject-1 do
+    if DictSubject[i] = stroka then
+      begin
+        str := i+1;
+        break;
+      end;
+  if CountObject > 0 then
+   for I := 0 to CountObject-1 do
+    if DictObject[i] = stolbec then
+      begin
+        stol := i+1;
+        break;
+      end;
+  position := pos(name, Form1.StringGrid1.Cells[stol,str]);
+  s := Form1.StringGrid1.Cells[stol,str];
+  dlina := name.Length;
+  if position <> 0 then
+  begin
+    if pos(',', Form1.StringGrid1.Cells[stol,str]) <> 0 then
+      Delete(s,position,dlina + 1)
+    else
+      Delete(s,position,dlina);
+    Form1.StringGrid1.Cells[stol,str] := s;
+  end;
+end;
+
+procedure TForm1.DeleteSubject(name: string);
+var
+  i,str: byte;
+begin
+  if CountSubject > 0 then
+  begin
+    for I := 0 to CountSubject-1 do
+      if DictSubject[i] = name then
+        begin
+          str := i;
+          break;
+        end;
+    if CountSubject - 1 - str > 0 then
+      begin
+        for I := str to CountSubject-2 do
+          begin
+            DictSubject[i] := DictSubject[i+1];
+            Form1.StringGrid1.Cells[0,i+1] := Form1.StringGrid1.Cells[0,i+2];
+          end;
+      DictSubject[CountSubject-1] := '';
+      Form1.StringGrid1.Cells[0,CountSubject] := '';
+      if StringGrid1.RowCount > 8 then
+        StringGrid1.RowCount := StringGrid1.RowCount - 1;
+      end
+    else
+      begin
+        DictSubject[str] := '';
+        Form1.StringGrid1.Cells[0,str+1] := '';
+      end;
+    dec(CountSubject);
+  end;
+  if CountObject > 0 then
+  begin
+    for I := 0 to CountObject-1 do
+      if DictObject[i] = name then
+        begin
+          str := i;
+          break;
+        end;
+    if CountObject - 1 - str > 0 then
+    begin
+      for I := str to CountObject-2 do
+        begin
+          DictObject[i] := DictObject[i+1];
+          Form1.StringGrid1.Cells[i+1,0] := Form1.StringGrid1.Cells[i+2,0];
+        end;
+      DictObject[CountObject-1] := '';
+      Form1.StringGrid1.Cells[CountObject,0] := '';
+      if StringGrid1.ColCount > 8 then
+        StringGrid1.ColCount := StringGrid1.ColCount - 1;
+    end
+    else
+      begin
+        DictObject[str] := '';
+        Form1.StringGrid1.Cells[str+1,0] := '';
+      end;
+    dec(CountObject);
+  end;
+end;
+
+procedure TForm1.DeleteObject(name: string);
+var
+  i,str: byte;
+begin
+  if CountObject > 0 then
+  begin
+    if CountSubject > 0 then    
+      for I := 0 to CountSubject-1 do
+        if DictSubject[i] = name then
+          exit;
+    for I := 0 to CountObject-1 do
+      if DictObject[i] = name then
+        begin
+          str := i;
+          break;
+        end;
+    if CountObject - 1 - str > 0 then
+    begin
+      for I := str to CountObject-2 do
+        begin
+          DictObject[i] := DictObject[i+1];
+          Form1.StringGrid1.Cells[i+1,0] := Form1.StringGrid1.Cells[i+2,0];
+        end;
+      DictObject[CountObject-1] := '';
+      Form1.StringGrid1.Cells[CountObject,0] := '';
+      if StringGrid1.ColCount > 8 then
+        StringGrid1.ColCount := StringGrid1.ColCount - 1;
+    end
+    else
+      begin
+        DictObject[str] := '';
+        Form1.StringGrid1.Cells[str+1,0] := '';
+      end;
+    dec(CountObject);
+  end;
+end;
+
+procedure TForm1.btnExecuteComClick(Sender: TObject);
+var
+  i,j: byte;
+begin
+  if CountCommand > 0 then
+    for I := 0 to countCommand-1 do
+    begin
+      for j := 0 to ArrayCommand[i].chisloOp-1 do
+        begin
+          case ArrayCommand[i].massiv[j].commandType of
+            1: CreateSubject(ArrayCommand[i].massiv[j].name);
+            2: CreateObject(ArrayCommand[i].massiv[j].name);
+            3: EnterRule(ArrayCommand[i].massiv[j].name,ArrayCommand[i].massiv[j].stroka,ArrayCommand[i].massiv[j].stolbec);
+            4: DeleteRule(ArrayCommand[i].massiv[j].name,ArrayCommand[i].massiv[j].stroka,ArrayCommand[i].massiv[j].stolbec);
+            5: DeleteSubject(ArrayCommand[i].massiv[j].name);
+            6: DeleteObject(ArrayCommand[i].massiv[j].name);
+          end;
+        end;
+      Memo1.Lines[ykaz] := Memo1.Lines[ykaz] + '       - выполнено';
+      ykaz := ykaz + ArrayCommand[i].chisloOp-1 + 4;
+    end;
+  CountCommand := 0;
+end;
+
+procedure TForm1.btnNewCommandClick(Sender: TObject);
+begin
+  if (not Assigned(Form2)) or (Form2 = nil) then   // проверка существования Формы (если нет, то
+       Form2:=TForm2.Create(Self, CountCommand, DictSubject, DictObject, ArrayCommand, CountCommand);    // создание Формы)
+  Form2.ShowModal;
+  if Form2.ModalResult = mrOk then
+    begin
+      ArrayCommand[CountCommand] := Form2.commanda;
+      WriteCommand(ArrayCommand[CountCommand]);
+      inc(CountCommand);
+    end;
+  Form2.Free;
+  Form2 := nil;
+end;
+
+procedure TForm1.btnSpisokCommandClick(Sender: TObject);
+begin
+  if (not Assigned(Form5)) or (Form5 = nil) then   // проверка существования Формы (если нет, то
+     Form5 := TForm5.Create(Self, DictSubject, DictObject, CountSubject, CountObject);    // создание Формы)
+
+  Form5.ShowModal;
+  Form5.Free;
+  Form5 := nil;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+  //risuem();
+  if (not Assigned(Form6)) or (Form6 = nil) then   // проверка существования Формы (если нет, то
+     Form6 := TForm6.Create(Self, kto, cherezKogo, naKogo, kak, chto, tip);    // создание Формы)
+  Form6.ShowModal;
+  Form6.Free;
+  Form6 := nil;
+end;
+
+end.
